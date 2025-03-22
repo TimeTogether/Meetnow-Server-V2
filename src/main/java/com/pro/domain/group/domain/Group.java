@@ -37,13 +37,6 @@ public class Group extends BaseEntity {
   @NotNull(message = "그룹 매니저의 email값은 필수값 입니다.")
   private String managerEmail;
 
-  //연관관계 필드
-  @OneToMany(mappedBy = "group")
-  private List<GroupUserMiddle> groupUserMiddleList = new ArrayList<>();
-
-  @OneToMany(mappedBy = "group")
-  private List<Meeting> meetingList = new ArrayList<>();
-
   //Builder, of
   @Builder
   public Group(String name, @Nullable String img, String managerEmail) {
@@ -52,11 +45,4 @@ public class Group extends BaseEntity {
     this.managerEmail = managerEmail;
   }
 
-  public static Group of(String name, @Nullable String img, String managerEmail){
-    return Group.builder()
-            .name(name)
-            .img(img)
-            .managerEmail(managerEmail)
-            .build();
-  }
 }

@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "t_mn_time")
 public class Time {
 
-  //자체 필드
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "time_id")
@@ -37,10 +36,4 @@ public class Time {
     this.times = times;
   }
 
-  public static Time of(Date date,  String times){
-    return Time.builder()
-            .date(date)
-            .times(times)
-            .build();
-  }
 }

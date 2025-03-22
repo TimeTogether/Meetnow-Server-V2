@@ -20,16 +20,13 @@ import java.util.List;
 @Table(name = "t_mn_place")
 public class Place{
 
-  //자체 필드
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "place_id")
   private Long id;
 
   @NotNull(message = "회의 아이디 값은 필수값입니다.")
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "meeting_id")
-  private Meeting meeting;
+  private Long meetingId;
 
   @NotNull(message = "장소 이름은 필수값입니다.")
   @Column(length = 150)
@@ -41,25 +38,14 @@ public class Place{
   @NotNull(message = "장소 확정 유무는 필수값입니다.")
   private boolean placeComplete;
 
-  //연관관계 필드
-  @OneToMany(mappedBy = "place")
-  private List<Vote> voteList = new ArrayList<>();
-
   //Builder, of
   @Builder
-  private Place(Meeting meeting, String placeName, @Nullable String placeUrl, boolean placeComplete) {
-    this.meeting = meeting;
+  public Place(Long id, Long meetingId, String placeName, @Nullable String placeUrl, boolean placeComplete) {
+    this.id = id;
+    this.meetingId = meetingId;
     this.placeName = placeName;
     this.placeUrl = placeUrl;
     this.placeComplete = placeComplete;
   }
 
-  public static Place of(Meeting meeting, String placeName,  @Nullable String placeUrl, boolean placeComplete){
-    return Place.builder()
-            .meeting(meeting)
-            .placeName(placeName)
-            .placeUrl(placeUrl)
-            .placeComplete(placeComplete)
-            .build();
-  }
 }

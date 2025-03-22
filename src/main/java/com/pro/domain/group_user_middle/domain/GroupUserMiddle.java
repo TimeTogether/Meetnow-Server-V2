@@ -16,33 +16,24 @@ import lombok.NoArgsConstructor;
 @Table(name = "t_mn_group_user_middle")
 public class GroupUserMiddle extends BaseEntity {
 
-  //자체 필드
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "group_user_middle_id")
   private Long id;
 
   @NotNull(message = "사용자는 필수입니다.")
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id")
-  private User user;
+  private Long userId;
 
   @NotNull(message = "그룹은 필수입니다.")
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "group_id")
-  private Group group;
+  private Long groupId;
 
   //Builder, of
   @Builder
-  private GroupUserMiddle(User user, Group group) {
-    this.user = user;
-    this.group = group;
+  public GroupUserMiddle(Long id, Long userId, Long groupId) {
+    this.id = id;
+    this.userId = userId;
+    this.groupId = groupId;
   }
 
-  public static GroupUserMiddle of(User user, Group group){
-    return GroupUserMiddle.builder()
-            .user(user)
-            .group(group)
-            .build();
-  }
+
 }

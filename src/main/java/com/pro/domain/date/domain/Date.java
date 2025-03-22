@@ -22,17 +22,14 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "t_mn_date")
 public class Date {
-  
-  //자체 필드
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "date_id")
   private Long id;
 
   @NotNull(message = "그룹 회의 중간 테이블 아이디는 필수값입니다.")
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "group_meeting_middle_id")
-  private GroupMeetingMiddle groupMeetingMiddle;
+  private Long groupMeetingMiddleId;
 
   @NotNull(message = "일(날짜)은 필수값입니다.")
   private LocalDate date;
@@ -40,24 +37,13 @@ public class Date {
   @NotNull(message = "요일값은 필수값입니다.")
   private String day;
 
-  //연관관계 필드
-  @OneToMany(mappedBy = "date")
-  private List<Time> timeList = new ArrayList<>();
-
   //Builder, of
   @Builder
-  private Date(GroupMeetingMiddle groupMeetingMiddle, LocalDate date, String day) {
-    this.groupMeetingMiddle = groupMeetingMiddle;
+  private Date(Long groupMeetingMiddleId, LocalDate date, String day) {
+    this.groupMeetingMiddleId = groupMeetingMiddleId;
     this.date = date;
     this.day = day;
   }
 
-  public static Date of(GroupMeetingMiddle groupMeetingMiddle, LocalDate date, String day){
-    return Date.builder()
-            .groupMeetingMiddle(groupMeetingMiddle)
-            .date(date)
-            .day(day)
-            .build();
-  }
 
 }

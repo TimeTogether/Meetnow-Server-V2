@@ -22,7 +22,6 @@ import java.util.List;
 @Table(name = "t_mn_meeting")
 public class Meeting {
 
-  //자체 필드
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "meeting_id")
@@ -38,7 +37,7 @@ public class Meeting {
   private String intro; //회의 소제목
 
   @NotNull(message = "그룹 매니저의 email값은 필수값입니다.")
-  private String managerEmail;
+  private Long managerId;
 
   @NotBlank(message = "회의날짜(기간)값은 필수값입니다.")
   private String dates;
@@ -52,41 +51,20 @@ public class Meeting {
   private BigDecimal time; //진행되는 회의시간
 
   @NotNull(message = "그룹은 필수값입니다.")
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "group_id")
-  private Group group;
-
-  //연관관계 필드
-  @OneToMany(mappedBy = "meeting")
-  private List<GroupMeetingMiddle> groupMeetingMiddleList = new ArrayList<>();
-
-  @OneToMany(mappedBy = "meeting")
-  private List<Place> placeList = new ArrayList<>();
+  private Long groupId;
 
   //Builder, of
   @Builder
-  private Meeting(String title, MeetingType meetingType, @Nullable String intro, String managerEmail, String dates, String timeRange, BigDecimal time,Group group) {
+  public Meeting(Long id, String title, MeetingType meetingType, @Nullable String intro, Long managerId, String dates, String timeRange, BigDecimal time, Long groupId) {
+    this.id = id;
     this.title = title;
     this.meetingType = meetingType;
     this.intro = intro;
-    this.managerEmail = managerEmail;
+    this.managerId = managerId;
     this.dates = dates;
     this.timeRange = timeRange;
     this.time = time;
-    this.group = group;
-  }
-
-  public static Meeting of(String title, MeetingType meetingType, @Nullable String intro, String managerEmail, String dates, String timeRange, BigDecimal time,Group group) {
-    return Meeting.builder()
-            .title(title)
-            .meetingType(meetingType)
-            .intro(intro)
-            .managerEmail(managerEmail)
-            .dates(dates)
-            .timeRange(timeRange)
-            .time(time)
-            .group(group)
-            .build();
+    this.groupId = groupId;
   }
 
 }

@@ -26,42 +26,25 @@ public class GroupMeetingMiddle extends BaseEntity {
   private Long id;
 
   @NotNull(message = "그룹은 필수값입니다.")
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "group_id")
-  private Group group;
+  private Long groupId;
 
   @NotNull(message = "회의는 필수값입니다.")
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "meeting_id")
-  private Meeting meeting;
+  private Long meetingId;
 
   @NotNull(message = "사용자는 필수값입니다.")
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id")
-  private User user;
+  private Long userId;
 
   @NotNull(message = "회의 확정 유무는 필수값입니다.")
   private boolean meetComplete;
 
-  //연관관계 필드
-  @OneToMany(mappedBy = "groupMeetingMiddle")
-  private List<Date> dateList = new ArrayList<>();
-
   //Builder, of
   @Builder
-  private GroupMeetingMiddle(Group group, Meeting meeting, User user, boolean meetComplete) {
-    this.group = group;
-    this.meeting = meeting;
-    this.user = user;
+  public GroupMeetingMiddle(Long id, Long groupId, Long meetingId, Long userId, boolean meetComplete) {
+    this.id = id;
+    this.groupId = groupId;
+    this.meetingId = meetingId;
+    this.userId = userId;
     this.meetComplete = meetComplete;
   }
 
-  public static GroupMeetingMiddle of(Group group, Meeting meeting,  User user, boolean meetComplete){
-    return GroupMeetingMiddle.builder()
-            .group(group)
-            .meeting(meeting)
-            .user(user)
-            .meetComplete(meetComplete)
-            .build();
-  }
 }

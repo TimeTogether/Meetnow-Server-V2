@@ -16,16 +16,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "t_mn_comment")
 public class Comment extends BaseEntity {
 
-  //자체 필드
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "comment_id")
   private Long id;
 
   @NotNull(message = "일정 아이디 값은 필수입니다.")
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "schedule_id")
-  private Schedule schedule;
+  private Long scheduleId;
 
   @NotBlank
   @Column(columnDefinition = "TEXT")//65535자의 고정된 최대 크기
@@ -33,15 +30,11 @@ public class Comment extends BaseEntity {
 
   //Builder, of
   @Builder
-  private Comment(Schedule schedule, String content) {
-    this.schedule = schedule;
+  public Comment(Long id, Long scheduleId, String content) {
+    this.id = id;
+    this.scheduleId = scheduleId;
     this.content = content;
   }
 
-  public static Comment of(Schedule schedule, String content){
-    return Comment.builder()
-            .schedule(schedule)
-            .content(content)
-            .build();
-  }
+
 }

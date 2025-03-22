@@ -51,13 +51,6 @@ public class User{
     @Nullable
     private String img;
 
-    //연관관계 필드
-    @OneToMany(mappedBy = "user")
-    private List<Schedule> scheduleList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<GroupUserMiddle> groupUserMiddles = new ArrayList<>();
-
     //Builder, of
     @Builder
     private User(String email, String password, String name, String oauth2Id, SocialType socialType, Role role, @Nullable String img) {

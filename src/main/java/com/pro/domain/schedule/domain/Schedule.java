@@ -19,21 +19,18 @@ import java.util.List;
 @Table(name = "t_mn_schedule")
 public class Schedule extends BaseEntity {
 
-  //자체 필드
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "schedule_id")
   private Long id;
 
-  @NotNull(message = "일정의 유저는 필수값입니다.")
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name ="user_id")
-  private User user;
+  @Column(name ="user_id")
+  private Long userId;
 
   @Nullable
   private Long group_schedule_id;
 
-  @Nullable
+  @NotBlank
   private ColorEnum color;
 
   @NotNull(message = "일정 시작시간은 필수값입니다.")
@@ -42,7 +39,7 @@ public class Schedule extends BaseEntity {
   @NotNull(message = "일정 종료시간은 필수값입니다.")
   private LocalDateTime end_time; //일정 종료시간
 
-  @NotBlank(message = "일정 제목은 필수값입니다.")
+  @NotNull(message = "일정 제목은 필수값입니다.")
   private String title; //일정 제목
   
   @Nullable
@@ -54,14 +51,12 @@ public class Schedule extends BaseEntity {
   @Nullable
   private String place_url; //일정 장소 url
 
-  //연관관계 필드
-  @OneToMany(mappedBy = "schedule")
-  private List<Comment> comments = new ArrayList<>();
 
   //Builder, of
   @Builder
-  private Schedule(User user, @Nullable Long group_schedule_id, ColorEnum color, LocalDateTime start_time, LocalDateTime end_time, String title, @Nullable String content, @Nullable String place_name, @Nullable String place_url) {
-    this.user = user;
+  public Schedule(Long id, Long userId, @Nullable Long group_schedule_id, ColorEnum color, LocalDateTime start_time, LocalDateTime end_time, String title, @Nullable String content, @Nullable String place_name, @Nullable String place_url) {
+    this.id = id;
+    this.userId = userId;
     this.group_schedule_id = group_schedule_id;
     this.color = color;
     this.start_time = start_time;
@@ -70,20 +65,6 @@ public class Schedule extends BaseEntity {
     this.content = content;
     this.place_name = place_name;
     this.place_url = place_url;
-  }
-
-  public static Schedule of (User user, @Nullable Long group_schedule_id, ColorEnum color, LocalDateTime start_time, LocalDateTime end_time, String title, @Nullable String content, @Nullable String place_name, @Nullable String place_url){
-    return Schedule.builder()
-            .user(user)
-            .group_schedule_id(group_schedule_id)
-            .color(color)
-            .start_time(start_time)
-            .end_time(end_time)
-            .title(title)
-            .content(content)
-            .place_name(place_name)
-            .place_url(place_url)
-            .build();
   }
 
 
