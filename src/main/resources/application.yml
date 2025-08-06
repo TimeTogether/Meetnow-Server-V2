@@ -4,8 +4,9 @@ spring:
 
 logging:
   level:
-    root: INFO
-    org.springframework: INFO
+    root: DEBUG
+    org.springframework: DEBUG
+
 
 management:
   endpoints:
