@@ -48,10 +48,10 @@ public class PromiseController {
     @Operation(summary = "암호화된 약속원들의 아이디 조회", description = "암호화된 약속원들의 아이디를 조회한다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공",
-                    content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+                    content = @Content(schema = @Schema(implementation = UserIdsResDTO.class)))
     })
     @GetMapping("/mem/s1/{promiseId}")
-    public BaseResponse<Object> getUsersByPromiseTime1(@PathVariable("promiseId") String promiseId) {
+    public BaseResponse<UserIdsResDTO> getUsersByPromiseTime1(@PathVariable("promiseId") String promiseId) {
         UserIdsResDTO dto = promiseSecurityService.getUsersByPromiseTime(promiseId);
         return new BaseResponse<>(dto);
     }
@@ -59,10 +59,10 @@ public class PromiseController {
     @Operation(summary = "약속원 정보 조회(약속아이디)", description = "약속원에 대한 정보를 조회한다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공",
-                    content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+                    content = @Content(schema = @Schema(implementation = UserInfoResDTO.class)))
     })
     @PostMapping("/mem/s2/{promiseId}")
-    public BaseResponse<Object> getUsersByPromiseTime2(@PathVariable("promiseId") String promiseId,
+    public BaseResponse<UserInfoResDTO> getUsersByPromiseTime2(@PathVariable("promiseId") String promiseId,
                                                        @RequestBody UserIdsResDTO reqDTO) {
         UserInfoResDTO dto = promiseSecurityService.getUserInfoByDTO(promiseId, reqDTO);
         return new BaseResponse<>(dto);
@@ -71,10 +71,10 @@ public class PromiseController {
     @Operation(summary = "약속원 정보 조회(전체)", description = "약속원에 대한 정보를 조회한다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공",
-                    content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+                    content = @Content(schema = @Schema(implementation = UserInfoListResDTO.class)))
     })
     @PostMapping("/mem/s2")
-    public BaseResponse<Object> getUsersByPromiseTime3(@RequestBody UserIdsResDTO reqDTO) {
+    public BaseResponse<UserInfoListResDTO> getUsersByPromiseTime3(@RequestBody UserIdsResDTO reqDTO) {
         UserInfoListResDTO dto = promiseSecurityService.getUserInfoByDTO2(reqDTO);
         return new BaseResponse<>(dto);
     }
@@ -123,7 +123,7 @@ public class PromiseController {
         """)
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "그룹 정보 조회 성공",
-                    content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+                    content = @Content(schema = @Schema(implementation = CreatePromise1Response.class))),
             @ApiResponse(responseCode = "401", description = "인증 실패",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(value = "{ \"code\": 401, \"message\": \"인증이 필요합니다.\" }")
@@ -161,7 +161,7 @@ public class PromiseController {
         """)
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "GroupShareKey 조회 성공",
-                    content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+                    content = @Content(schema = @Schema(implementation = CreatePromise2Response.class))),
             @ApiResponse(responseCode = "401", description = "인증 실패",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류",
@@ -194,7 +194,7 @@ public class PromiseController {
         """)
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "그룹원 조회 성공",
-                    content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+                    content = @Content(schema = @Schema(implementation = CreatePromise3Response.class))),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
@@ -224,7 +224,7 @@ public class PromiseController {
         """)
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "그룹원 조회 성공",
-                    content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+                    content = @Content(schema = @Schema(implementation = CreatePromise4Response.class))),
             @ApiResponse(responseCode = "401", description = "인증 실패",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류",
@@ -250,7 +250,7 @@ public class PromiseController {
         """)
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "enc_promise_id 리스트 조회 성공",
-                    content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+                    content = @Content(schema = @Schema(implementation = GetPromiseKey1.class))),
             @ApiResponse(responseCode = "401", description = "인증 실패",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(value = "{ \"code\": 401, \"message\": \"인증이 필요합니다.\" }")
@@ -284,7 +284,7 @@ public class PromiseController {
         """)
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "enc_promise_key 조회 성공",
-                    content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+                    content = @Content(schema = @Schema(implementation = GetPromiseKey2.class))),
             @ApiResponse(responseCode = "401", description = "인증 실패",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(value = "{ \"code\": 401, \"message\": \"인증이 필요합니다.\" }")
