@@ -37,10 +37,10 @@ public class ScheduleQueryController {
     @Operation(summary = "약속일정 조회", description = "약속일정을 조회한다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공",
-                    content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+                    content = @Content(schema = @Schema(implementation = PromiseListResDTO.class)))
     })
     @PostMapping("/get")
-    public BaseResponse<Object> getPromiseView(@RequestBody GetPromiseBatchReqDTO reqDTO){
+    public BaseResponse<PromiseListResDTO> getPromiseView(@RequestBody GetPromiseBatchReqDTO reqDTO){
         String userId = reqDTO.pseudoId();
         PromiseListResDTO dto = confirmedScheduleService.getPromiseView(reqDTO, userId);
         return new BaseResponse<>(dto);
