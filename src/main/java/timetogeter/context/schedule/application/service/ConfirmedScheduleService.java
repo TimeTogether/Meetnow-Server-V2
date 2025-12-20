@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import timetogeter.context.place.application.service.UserBoardService;
 import timetogeter.context.place.domain.repository.UserBoardRepository;
+import timetogeter.context.promise.domain.entity.Promise;
 import timetogeter.context.promise.domain.entity.PromiseShareKey;
 import timetogeter.context.promise.domain.repository.PromiseRepository;
 import timetogeter.context.promise.exception.PromiseNotFoundException;
@@ -95,7 +96,10 @@ public class ConfirmedScheduleService {
     // schedule 저장, 타임스탬프 저장, promise 관련 테이블 모두 삭제 (Promise, PromiseDate, PromisePlace, Vote, PromiseTime, PromiseCheck)
     @Transactional
     public void confirmSchedule(String userId, String groupId, ScheduleConfirmReqDTO reqDTO) {
-        Schedule schedule = Schedule.of(reqDTO.scheduleId(), reqDTO.title(), "", reqDTO.purpose(), reqDTO.placeId(), groupId);
+        Promise foundPromise = promiseRepository.findByPromiseId(reqDTO.promiseId())
+                .orElseThrow(() -> new PromiseNotFoundException(BaseErrorCode.PROMISE_NOT_FOUND, 
+                        "[ERROR] " + reqDTO.promiseId() + "에 해당하는 약속이 존재하지 않습니다."));
+        Schedule schedule = Schedule.of(reqDTO.scheduleId(), reqDTO.title(), "", foundPromise.getPurpose(), reqDTO.placeId(), groupId);
         scheduleRepository.save(schedule);
 
         final String encTimeStamp = reqDTO.encTimeStamp();
