@@ -41,6 +41,7 @@ public class Promise {
         this.promiseId = UUID.randomUUID().toString();
         this.groupId = groupId;
         this.title = title;
+        this.purpose = promiseType;
         this.type = promiseType;
         this.managerId = managerId;
         this.promiseImg = promiseImg;
