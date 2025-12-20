@@ -86,7 +86,17 @@ public class PromiseDetailInfoService {
     public List<PromiseView4Response> getScheduleInfoList(String userId, PromiseView4Request request) {
         //request내 각 scheduleId들에 대해 Schedule객체를 반환
         List<String> scheduleIdList = request.scheduleIdList();
-        List<Schedule> schedules = scheduleRepository.findByScheduleIdIn(scheduleIdList);
+        
+        // 중복 제거된 scheduleId로 Schedule 조회 (DB 쿼리 최적화)
+        List<String> distinctScheduleIds = scheduleIdList.stream()
+                .distinct()
+                .collect(Collectors.toList());
+        
+        List<Schedule> schedules = scheduleRepository.findByScheduleIdIn(distinctScheduleIds);
+
+        //Schedule을 scheduleId로 매핑 (같은 scheduleId에 대해 하나의 Schedule만 저장)
+        Map<String, Schedule> scheduleMap = schedules.stream()
+                .collect(Collectors.toMap(Schedule::getScheduleId, schedule -> schedule, (existing, replacement) -> existing));
 
         //해당 schedules의 placeId 모두 수집
         List<Integer> placeIds = schedules.stream()
@@ -101,8 +111,15 @@ public class PromiseDetailInfoService {
         Map<Integer, PlaceBoard> placeMap = places.stream()
                 .collect(Collectors.toMap(PlaceBoard::getPlaceBoardId, place -> place));
 
-        return schedules.stream()
-                .map(schedule -> {
+        // scheduleIdList의 순서와 개수를 유지하면서 각 scheduleId에 대해 Schedule 정보 매핑
+        // 중복된 scheduleId도 각각 별도의 응답으로 반환
+        return scheduleIdList.stream()
+                .map(scheduleId -> {
+                    Schedule schedule = scheduleMap.get(scheduleId);
+                    if (schedule == null) {
+                        return null; // Schedule이 없으면 null 반환 (필터링됨)
+                    }
+                    
                     PlaceBoard place = placeMap.get(schedule.getPlaceId());
                     String confirmedDateTime = schedule.getScheduleId();
                     String content = schedule.getContent() != null ? schedule.getContent() : "";
@@ -121,6 +138,7 @@ public class PromiseDetailInfoService {
                             schedule.getGroupId()
                     );
                 })
+                .filter(response -> response != null) // null 제거
                 .collect(Collectors.toList());
     }
 }
