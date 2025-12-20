@@ -72,14 +72,12 @@ public class PromiseDetailInfoService {
     // 디테일 확인 - 사용자가 속한 그룹 내 약속을 (정하는중) , (확정완료) 로 구분지어 보여주는 화면 Step3 - 메인 메소드
     public List<PromiseView3Response> getScheduleIdList(String userId, PromiseView3Request request) {
         List<String> promiseIdList = request.promiseIdList();
-        List<String> encPromiseKeyList = promiseShareKeyRepository.findEncPromiseKeysByPromiseIdIn(promiseIdList);
-
-        // encPromiseKey에 해당하는 scheduleId 조회
-        List<String> scheduleIds = promiseShareKeyRepository.findScheduleIdsByEncPromiseKeyList(encPromiseKeyList);
+        
+        // promiseId로 직접 scheduleId 조회 (확정된 약속만 조회)
+        List<String> scheduleIds = promiseShareKeyRepository.findScheduleIdsByPromiseIdIn(promiseIdList);
 
         // 응답으로 변환
         return scheduleIds.stream()
-                .distinct()
                 .map(PromiseView3Response::new)
                 .collect(Collectors.toList());
     }
