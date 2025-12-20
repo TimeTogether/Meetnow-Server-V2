@@ -92,9 +92,10 @@ public class PromiseDetailController {
     @SecurityRequirement(name = "BearerAuth")
     @GetMapping(value = "/view1", produces = MediaType.APPLICATION_JSON_VALUE)
     public BaseResponse<List<PromiseView1Response>> view1(
-            @AuthenticationPrincipal UserPrincipal userPrincipal) throws Exception{
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestParam(required = false) String groupId) throws Exception{
         String userId = userPrincipal.getId();
-        List<PromiseView1Response> response = promiseDetailInfoService.getEncPromiseIdList(userId);
+        List<PromiseView1Response> response = promiseDetailInfoService.getEncPromiseIdList(userId, groupId);
         return new BaseResponse<>(response);
     }
 

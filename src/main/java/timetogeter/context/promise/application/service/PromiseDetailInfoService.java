@@ -37,7 +37,8 @@ public class PromiseDetailInfoService {
     private final PlaceBoardRepository placeBoardRepository;
 
     // 디테일 확인 - 사용자가 속한 그룹 내 약속을 (정하는중) , (확정완료) 로 구분지어 보여주는 화면 Step1 - 메인 메소드
-    public List<PromiseView1Response> getEncPromiseIdList(String userId) {
+    public List<PromiseView1Response> getEncPromiseIdList(String userId, String groupId) {
+        // groupId는 현재 사용하지 않지만, 향후 그룹 내 모든 약속 조회를 위해 파라미터로 받음
         List<String> encPromiseIds = promiseProxyUserRepository.findPromiseIdsByUserId(userId);
 
         return encPromiseIds.stream()
@@ -47,12 +48,13 @@ public class PromiseDetailInfoService {
 
     // 디테일 확인 - 사용자가 속한 그룹 내 약속을 (정하는중) 로 구분지어 보여주는 화면 Step2 - 메인 메소드
     public List<PromiseView2Response> getPromiseInfoList(String userId, Promiseview2Request request) {
-        //1. request내 각 promiseId들에 대해 PromiseRepository객체를 반환
-        //+ 그냥 반환하는게 아니라, promise 테이블 내에서 groupId에 해당하는 promiseId와 겹치는거만 반환하도록 쿼리 추가
-        List<String> promiseIdList = request.promiseIdList();
         String groupId = request.groupId();
-        List<Promise> promises = promiseRepository.findByGroupIdAndPromiseIdIn(groupId, promiseIdList);
-
+        // TODO: promiseIdList는 받되, 현재는 참고하지 않음. (여러 유저간 정하는중인 약속 동기화가 현재 안돼서 불가피하게.)
+        // 향후 promiseIdList에 있는 promiseId들은 기존 로직대로 처리하고, 없는 promiseId는 보류하는 로직 추가 예정
+        List<String> promiseIdList = request.promiseIdList();
+        
+        // groupId로 그룹 내 모든 약속 조회 (동기화를 위해)
+        List<Promise> promises = promiseRepository.findByGroupId(groupId);
 
         //2. request내 각 promiseId들에 대해 PromiseCheck내의 insConfirmed를 반환
         return promises.stream()
